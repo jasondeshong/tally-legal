@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Tally — Delete your account</title>
+  <!-- Google Play requires a web path to account deletion in addition to the
+       in-app flow (Settings → Delete account). This page is that path. -->
+  <style>
+    body { font-family: -apple-system, "Segoe UI", system-ui, sans-serif; background: #faf9f6; color: #16150f;
+           max-width: 420px; margin: 0 auto; padding: 48px 24px 96px; line-height: 1.55; }
+    h1 { font-size: 24px; letter-spacing: -0.02em; }
+    p, li { font-size: 14px; color: rgba(22, 21, 15, 0.85); }
+    .muted { color: rgba(22, 21, 15, 0.62); font-size: 13px; }
+    input { width: 100%; box-sizing: border-box; font-size: 16px; padding: 12px 14px; margin: 6px 0;
+            border: 1px solid rgba(22, 21, 15, 0.15); border-radius: 12px; background: #fff; }
+    button { width: 100%; font-size: 15px; font-weight: 600; padding: 12px; margin-top: 10px;
+             border-radius: 999px; border: 1px solid #d43a00; background: #d43a00; color: #fff; cursor: pointer; }
+    button:disabled { opacity: 0.5; cursor: default; }
+    .msg { font-size: 14px; margin-top: 12px; }
+    .err { color: #d43a00; }
+    .ok { color: #1a7f37; }
+  </style>
+</head>
+<body>
+  <h1>Delete your Tally account</h1>
+  <p>This permanently removes your account and <strong>everything</strong> in it — goals, check-offs, streaks, to-dos, board notes, books, energy logs, AI recaps. There is no undo and nothing is retained.</p>
+  <p class="muted">Signed in with Apple or Google? Use Settings → Delete account inside the app, or email <a href="mailto:deshongjasona@gmail.com">deshongjasona@gmail.com</a> from your account's address.</p>
+
+  <form id="f">
+    <input id="email" type="email" placeholder="Email" autocomplete="email" required />
+    <input id="password" type="password" placeholder="Password" autocomplete="current-password" required />
+    <input id="confirm" type="text" placeholder='Type DELETE to confirm' autocomplete="off" required />
+    <button id="go" type="submit">Permanently delete my account</button>
+  </form>
+  <p id="msg" class="msg" role="status"></p>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+  <script>
+    const client = window.supabase.createClient(
+      "https://ipuzemouaotairtllawk.supabase.co",
+      "sb_publishable_h5b3dbah1XTyqhtz8W0kNA_OpkCR1zc"
+    );
+    const msg = document.getElementById("msg");
+    document.getElementById("f").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      msg.className = "msg";
+      if (document.getElementById("confirm").value.trim() !== "DELETE") {
+        msg.textContent = "Type DELETE (all caps) to confirm.";
+        msg.classList.add("err");
+        return;
+      }
+      const btn = document.getElementById("go");
+      btn.disabled = true;
+      msg.textContent = "Working…";
+      try {
+        const { error: signInErr } = await client.auth.signInWithPassword({
+          email: document.getElementById("email").value.trim(),
+          password: document.getElementById("password").value,
+        });
+        if (signInErr) throw new Error("Wrong email or password.");
+        const { data, error } = await client.functions.invoke("delete-account", {
+          body: { confirm: "DELETE" },
+        });
+        if (error || (data && data.error)) throw new Error((data && data.error) || "Deletion failed — try again.");
+        await client.auth.signOut().catch(() => {});
+        msg.textContent = "Done. Your account and all data are gone. Thanks for trying Tally.";
+        msg.classList.add("ok");
+        document.getElementById("f").remove();
+      } catch (err) {
+        msg.textContent = err.message || "Something went wrong — try again.";
+        msg.classList.add("err");
+        btn.disabled = false;
+      }
+    });
+  </script>
+</body>
+</html>
