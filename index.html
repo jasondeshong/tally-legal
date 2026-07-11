@@ -11,16 +11,29 @@
     .tag { color: rgba(22,21,15,0.6); margin-top: 0; }
     h2 { font-size: 17px; margin-top: 36px; }
     p, li { font-size: 15px; color: rgba(22,21,15,0.85); }
-    a { color: #d43a00; }
-    .mark { display: inline-flex; gap: 5px; margin-bottom: 12px; }
-    .mark span { width: 6px; height: 40px; background: #16150f; border-radius: 3px; }
-    .mark .d { background: #ff4d00; transform: rotate(28deg); }
+    a { color: #a05f2c; }
+    .mark { display: block; margin-bottom: 12px; }
   </style>
 </head>
 <body>
-  <div class="mark"><span></span><span></span><span></span><span></span><span class="d"></span></div>
+  <!-- The tally count as pixel art — PartyTime's pixel system (rounded
+       squares, radius 0.3 × size, dot:gap 3:2). Matches the app icon. -->
+  <svg class="mark" width="62" height="34" viewBox="0 0 33 18" aria-hidden="true">
+    <g fill="#16150F">
+      <rect x="0" y="0" width="3" height="3" rx="0.9"/><rect x="0" y="5" width="3" height="3" rx="0.9"/><rect x="0" y="10" width="3" height="3" rx="0.9"/>
+      <rect x="10" y="0" width="3" height="3" rx="0.9"/><rect x="10" y="5" width="3" height="3" rx="0.9"/><rect x="10" y="15" width="3" height="3" rx="0.9"/>
+      <rect x="20" y="0" width="3" height="3" rx="0.9"/><rect x="20" y="10" width="3" height="3" rx="0.9"/><rect x="20" y="15" width="3" height="3" rx="0.9"/>
+      <rect x="30" y="5" width="3" height="3" rx="0.9"/><rect x="30" y="10" width="3" height="3" rx="0.9"/><rect x="30" y="15" width="3" height="3" rx="0.9"/>
+    </g>
+    <g fill="#C1763A">
+      <rect x="0" y="15" width="3" height="3" rx="0.9"/><rect x="5" y="12.5" width="3" height="3" rx="0.9"/>
+      <rect x="10" y="10" width="3" height="3" rx="0.9"/><rect x="15" y="7.5" width="3" height="3" rx="0.9"/>
+      <rect x="20" y="5" width="3" height="3" rx="0.9"/><rect x="25" y="2.5" width="3" height="3" rx="0.9"/>
+      <rect x="30" y="0" width="3" height="3" rx="0.9"/>
+    </g>
+  </svg>
   <h1>Tally</h1>
-  <p class="tag">Ten a day. Every day.</p>
+  <p class="tag">Count what matters.</p>
 
   <h2>Support</h2>
   <p>Questions, bugs, or feedback? Email <a href="mailto:deshongjasona@gmail.com">deshongjasona@gmail.com</a> and you'll get a reply from a real person (Jay).</p>
